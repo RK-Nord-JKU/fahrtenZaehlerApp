@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1 class="text-center">Datenerfassung Nordstelle</h1>
+    <form action="/" method="post" >
+        <div class="row g-3">
+            <div class="col-12 col-sm-4 mb-2">
+                <label for="date" class="form-label mb-1">Datum des Dienstes</label>
+                <input type="date" class="form-control" id="date" name="date" value="2023-06-27" min="2023-06-20" max="2023-06-27">
+            </div>
+            <div class="col-12 col-sm-4 mb-2 pt-2 ps-sm-5">
+                <input type="radio" class="form-check-input" id="td" value="TD" name="shift">
+                <label for="td" class="form-label mb-1">Tagdienst</label>
+                <br>
+                <input type="radio" class="form-check-input" id="nd" value="ND" name="shift">
+                <label for="nd" class="form-label mb-1">Nachtdienst</label>
+            </div>
+            <div class="col-12 col-sm-4 mb-2">
+                <label for="numberOfRides" class="form-label mb-1">Anzahl Ausfahrten</label>
+                <input type="number" class="form-control" id="numberOfRides" name="numberOfRides" min="0" max="20">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-secondary mb-2 w-100">Senden</button>
+
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+{% endblock %}
