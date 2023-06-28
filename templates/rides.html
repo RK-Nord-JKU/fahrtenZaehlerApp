@@ -4,20 +4,25 @@
     <h1 class="text-center">Datenerfassung Nordstelle</h1>
     <form action="/" method="post" >
         <div class="row g-3">
-            <div class="col-12 col-sm-4 mb-2">
+            <div class="col-12 col-sm-6 mb-2">
                 <label for="date" class="form-label mb-1">Datum des Dienstes</label>
-                <input type="date" class="form-control" id="date" name="date" value="2023-06-27" min="2023-06-20" max="2023-06-27">
+                <input type="date" class="form-control" id="date" name="date" value="{{data['date']}}" min="{{minDate}}" max="{{data['date']}}">
             </div>
-            <div class="col-12 col-sm-4 mb-2 pt-2 ps-sm-5">
-                <input type="radio" class="form-check-input" id="td" value="TD" name="shift">
+            <div class="col-12 col-sm-6 mb-2 pt-sm-4 ps-sm-5">
+                <input type="radio" class="form-check-input" id="td" value="TD" name="shift" {% if data["shift"] == "TD" %} checked {% endif %}>
                 <label for="td" class="form-label mb-1">Tagdienst</label>
-                <br>
-                <input type="radio" class="form-check-input" id="nd" value="ND" name="shift">
+                <input type="radio" class="form-check-input ms-2" id="nd" value="ND" name="shift" {% if data["shift"] == "ND" %} checked {% endif %}>
                 <label for="nd" class="form-label mb-1">Nachtdienst</label>
             </div>
-            <div class="col-12 col-sm-4 mb-2">
+        </div>
+        <div class="row g-3">
+            <div class="col-12 col-sm-6 mb-2">
                 <label for="numberOfRides" class="form-label mb-1">Anzahl Ausfahrten</label>
-                <input type="number" class="form-control" id="numberOfRides" name="numberOfRides" min="0" max="20">
+                <input type="number" class="form-control" id="numberOfRides" name="numberOfRides" value="{{data['numberOfRides']}}" min="0" max="20">
+            </div>
+            <div class="col-12 col-sm-6 mb-2">
+                <label for="restingHours" class="form-label mb-1">Ruhestunden</label>
+                <input type="number" class="form-control" id="restingHours" name="restingHours" value="{{data['restingHours']}}" min="0" max="12" step="0.5">
             </div>
         </div>
         
