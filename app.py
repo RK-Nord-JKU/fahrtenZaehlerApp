@@ -8,6 +8,10 @@ import os
 from datetime import date, timedelta
 from flask import Flask, render_template, request, flash
 
+
+FOLDER = "src/"  # docker
+# FOLDER = ""  # local
+
 app = Flask(__name__)
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -43,11 +47,13 @@ def rides():
 
 
 def add_to_database(db_name, data_to_add):
-    with open(f"database/{db_name}.csv", "a", newline='') as f:
+    with open(f"{FOLDER}/database/{db_name}.csv", "a", newline='') as f:
         dict_writer = csv.DictWriter(f, data_to_add.keys())
         dict_writer.writerow(data_to_add)
 
 
 if __name__ == "__main__":
-    app.run()  # localhost
-    #app.run(host="0.0.0.0")  # in network
+    if FOLDER == "":
+        app.run()  # localhost
+    else:
+        app.run(host="0.0.0.0")  # in network
