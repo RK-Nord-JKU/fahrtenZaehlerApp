@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Apr 22 17:07:13 2022
-@author: Hammerle
+@author: Wei
 """
 import csv
 import os
@@ -9,8 +8,9 @@ from datetime import date, timedelta
 from flask import Flask, render_template, request, flash
 
 
-FOLDER = "src/"  # docker
-# FOLDER = ""  # local
+# FOLDER = "src/"  # docker
+FOLDER = ""  # local
+DB_NAME = "rides"
 
 app = Flask(__name__)
 
@@ -41,15 +41,26 @@ def rides():
         elif data["date"] == today and data["shift"] == "ND":
             flash("Nachtdienste beginnen immer am Vortag! ", "danger")    
         else:
-            add_to_database("rides", data)
+            add_to_database(DB_NAME, data)
             flash("Danke für deine Mithilfe!", "success")
     return render_template("rides.html", minDate=minDate, data=data)
 
+@app.route("/ansicht", methods=["GET"])
+def plot():
+    return render_template("plot.html", data=get_database(DB_NAME))
 
-def add_to_database(db_name, data_to_add):
-    with open(f"{FOLDER}/database/{db_name}.csv", "a", newline='') as f:
+
+def add_to_database(db_name: str, data_to_add) -> None:
+    '''adds data to the csv file'''
+    with open(f"database/{db_name}.csv", "a", newline='') as f:
         dict_writer = csv.DictWriter(f, data_to_add.keys())
         dict_writer.writerow(data_to_add)
+
+def get_database(db_name: str) -> dict:
+    '''reades the data from the csv file and returns it as a list'''
+    with open(f"database/{db_name}.csv", "r") as f:
+        csv_reader = csv.reader(f, delimiter=',')
+        return list(csv_reader)
 
 
 if __name__ == "__main__":
