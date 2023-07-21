@@ -1,0 +1,1 @@
+This application was written for the paramedic station ("Nordstelle Linz")on the jku Linz. The app provides an flask webpage with two sites. One with a formular and one for the view. A link for downloading should be added. 
