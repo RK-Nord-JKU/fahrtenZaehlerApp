@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: Wei
+@author: Weiss
 """
 import csv
 import os
