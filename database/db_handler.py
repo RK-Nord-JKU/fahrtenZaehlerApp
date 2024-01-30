@@ -24,7 +24,7 @@ class RD_Shift:
 class DB_Handler():
 
     def __init__(self, filename: str) -> None:
-        self.conn = sqlite3.connect(filename)
+        self.conn = sqlite3.connect(filename, check_same_thread=False)
         self.cur = self.conn.cursor()
 
     def createTable(self) -> None:
@@ -79,10 +79,17 @@ class DB_Handler():
         # header
         names = list(map(lambda x: x[0], self.cur.description))
 
-        return pd.DataFrame(data,columns=names)
+        df = pd.DataFrame(data,columns=names)
+        df['date'] = df["date"].dt.strftime('%d.%m.%Y')
+        print(df)
+    
+        df.insert(loc=0, column='weekday', value=df["date"].dt.strftime('%a'))
 
     def __del__(self):
         self.conn.close
 
-        
+if __name__ == '__main__':
+    DB_NAME = "database/rides_statistic.sqlite"
+    db_handler = DB_Handler(filename=DB_NAME)
+    db_handler.selectDF()
 

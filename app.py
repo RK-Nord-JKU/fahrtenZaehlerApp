@@ -44,7 +44,14 @@ def rides():
 
 @app.route("/ansicht", methods=["GET"])
 def plot():
-    return render_template("plotDF.html", df=db_handler.selectDF())
+    df = db_handler.selectDF()
+
+    # print(date.today())
+    # print(date.today()-timedelta(days=21))
+    print(df)
+    
+    # add weekday
+    return render_template("plotDF.html", df=df)
 
 if __name__ == "__main__":
     if FOLDER == "":
