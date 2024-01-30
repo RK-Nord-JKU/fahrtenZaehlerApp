@@ -5,15 +5,26 @@ from datetime import date
 
 @dataclass
 class RD_Shift:
-    date: date # YYYY-MM-DD
-    type: str # TD or ND / dayshift or nightshift
-    events: int # number of rides
-    resthours: float # break
+    date: date = date.today() # YYYY-MM-DD
+    type: str = None # TD or ND / dayshift or nightshift
+    events: int = None # number of rides
+    resthours: float = None # break
+
+    def is_valid(self) -> str:
+        if self.date is None or self.type is None or self.events is None or self.resthours is None:
+            return "Bitte alle Felder ausfüllen"
+        elif self.date == date.today() and self.type == "ND":
+            return "Nachtdienste beginnen immer am Vortag! "
+        else:
+            return None  
+
+    def as_dict(self):
+        return {"date": self.date, "type": self.type, "events": self.events, "resthours": self.resthours}
 
 class DB_Handler():
 
-    def __init__(self) -> None:
-        self.conn = sqlite3.connect("database/rides_statistic.sqlite")
+    def __init__(self, filename: str) -> None:
+        self.conn = sqlite3.connect(filename)
         self.cur = self.conn.cursor()
 
     def createTable(self) -> None:
