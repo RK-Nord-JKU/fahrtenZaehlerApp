@@ -1,5 +1,5 @@
 import sqlite3
-import os
+import pandas as pd
 from dataclasses import dataclass
 from datetime import date
 
@@ -17,15 +17,15 @@ class DB_Handler():
         self.cur = self.conn.cursor()
 
     def createTable(self) -> None:
-        self.cur.execute(
-            """CREATE TABLE IF NOT EXISTS shifts (
+        '''creates the table is not exits'''
+        sql = """CREATE TABLE IF NOT EXISTS shifts (
             date DATE NOT NULL UNIQUE,
             events_day INTEGER,
             resthours_day REAL,
             events_night INTEGER,
             resthours_night REAL
-            )""")
-        print("Database created")
+            )"""
+        self.cur.execute(sql)
 
     def addShift(self, shift: RD_Shift):
         '''Adds a new shift to the database or updates an old one'''
@@ -49,6 +49,26 @@ class DB_Handler():
             else:
                 raise ValueError
         self.conn.commit()
+
+    def selectRange(self, start: date, stop: date) -> list:
+        sql = """SELECT * FROM shifts WHERE date BETWEEN ? AND ?"""
+        self.cur.execute(sql, (start, stop))
+        return self.cur.fetchall()
+    
+    def selectDF(self, start:date=None, stop:date=None):
+
+        # get data
+        if start and stop:
+            sql = """SELECT * FROM shifts WHERE date BETWEEN ? AND ?"""
+            self.cur.execute(sql, (start, stop))
+        else:
+            sql = """SELECT * FROM shifts"""
+            self.cur.execute(sql)   
+        data = self.cur.fetchall()
+        # header
+        names = list(map(lambda x: x[0], self.cur.description))
+
+        return pd.DataFrame(data,columns=names)
 
     def __del__(self):
         self.conn.close
