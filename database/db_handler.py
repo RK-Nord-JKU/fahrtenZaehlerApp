@@ -67,6 +67,7 @@ class DB_Handler():
         return self.cur.fetchall()
     
     def selectDF(self, start:date=None, stop:date=None):
+        '''returns the data as dataframe'''
 
         # get data
         if start and stop:
@@ -80,10 +81,15 @@ class DB_Handler():
         names = list(map(lambda x: x[0], self.cur.description))
 
         df = pd.DataFrame(data,columns=names)
-        df['date'] = df["date"].dt.strftime('%d.%m.%Y')
-        print(df)
+
+        return df
     
-        df.insert(loc=0, column='weekday', value=df["date"].dt.strftime('%a'))
+        # df['date']= pd.to_datetime(df['date'])
+        # print(df)
+        # df['date'] = df["date"].dt.strftime('%d.%m.%Y')
+        # print(df)
+    
+        # df.insert(loc=0, column='weekday', value=df["date"].dt.strftime('%a'))
 
     def __del__(self):
         self.conn.close
